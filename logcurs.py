@@ -20,9 +20,16 @@ class fleet:
 ##Fleet Class, to persistently hold records of different aircraft types
 ##passes aircraft instances to the entry class when entrys are formed
         def __init__(self):
-                fleetfile = open('fleetfile','r')
-                self.fleet = pickle.load(fleetfile)
-                fleetfile.close 
+                try:
+			fleetfile = open('fleetfile','r')
+                	self.fleet = pickle.load(fleetfile)
+                	fleetfile.close
+		except:
+			fleetfile = open('fleetfile','w')
+			self.fleet = []
+			pickle.dump(self.fleet,fleetfile)
+                	fleetfile.close()
+			 
 
         def add(self,typ,eng,cplx,cls,hp):        
         ##adds aircraft to fleet        
@@ -158,7 +165,11 @@ logbook = []
 fl = fleet()
 
 ##read csv file into csv reader object
-reader = csv.reader(open('log.csv','r'))
+try:
+	reader = csv.reader(open('log.csv','r'))
+except:
+	filerr = raw_input('log.csv not found, please enter filename of LBP csv file : ')
+	reader = csv.reader(open(filerr,'r'))
 
 ##iterate reader to create logbook - split to form dates, and pass into
 ##datetime, and use a fleet search to pass airplane instances in to entry
@@ -173,7 +184,7 @@ loopctl = ''
 
 screen = curses.initscr()
 
-while loopctl != 'q':
+while loopctl != 't':
         
         screen.clear()
         screen.border(0)
@@ -187,7 +198,7 @@ while loopctl != 'q':
         if astring == 'h':
                 screen.addstr(4,5, 'any unselected time groups will default to "all"')
                 screen.addstr(5,5, '------------------------------------------------')
-                screen.addstr(6,5, '-ttime _ attribute for different types of time')
+                screen.addstr(6,5, '-time _ attribute for different types of time')
                 screen.addstr(7,5, '-aircraft _ aircaft type for type time')
                 screen.addstr(8,5, '-class _ aircraft class for class time')
                 screen.addstr(9,5, '-inlast _ days for time in last x days')
@@ -216,8 +227,8 @@ while loopctl != 'q':
         classctl = ''
 
         ##parse string, set non default values to index +1 entries
-        if '-ttime' in aslist:
-                totalctl = aslist[aslist.index('-ttime')+1]
+        if '-time' in aslist:
+                totalctl = aslist[aslist.index('-time')+1]
 
         if '-aircraft' in aslist:
                 acactl = 'typ'

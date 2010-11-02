@@ -4,7 +4,7 @@ import sys
 import csv
 import curses
 
-##comment 222
+
 
 class airplane:
 ##Airplane Class, for holding aircraft variables

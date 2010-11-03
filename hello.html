@@ -1,6 +1,22 @@
 <form action="/hello" method="GET">
-<input type="text" size="50" maxlength="100" name="task">
+<! <input type="text" size="50" maxlength="100" name="task">
 <input type="submit" name="save" value="save">
 
+<select name='typetime'>
+<option name='duration' value='duration'>duration
+<option name='instrument' value='instrument'>instrument
+<option name='night' value='night'>night
+<option name='instructor' value='instructor'>instructor
+</select>
+
+<select name='acbox'>
+<option name='all' value='all'selected>all
+%for ac in aclist:
+<option name={{ac}} value={{ac}}> {{ac}}
+%end
+</select>
+<font face="arial">{{text}}</font>
+{{acs}}
 
 </form>
+

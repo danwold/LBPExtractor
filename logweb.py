@@ -157,6 +157,8 @@ def retentrystr(dt):
 logbook = []
 
 fl = fleet()
+aclist = fl.fleetlist()
+
 
 ##read csv file into csv reader object
 reader = csv.reader(open('log.csv','r'))
@@ -172,82 +174,40 @@ for r in reader:
       logbook.append(a)
 
 
-
+acs = ''
 @route('/hello', method='GET')
 def mainpage():
-	
+	text = ''
 	if request.GET.get('save','').strip():
-		astring = request.GET.get('task', '')
 		
-		 
-        	##aslist is split string for attribute input       
-        	aslist = astring.split(' ')
 
         	##default values for untouched parsing
         	totalctl = 'duration'
         	acactl = 'all'
         	tdctl = 'all'
-        	acmctl = ''
-        	classctl = ''
-
-        	##parse string, set non default values to index +1 entries
-        	if '-ttime' in aslist:
-                	totalctl = aslist[aslist.index('-ttime')+1]
-
-        	if '-aircraft' in aslist:
-                	acactl = 'typ'
-                	acmctl = aslist[aslist.index('-aircraft')+1]       
-
-        	if '-inlast' in aslist:
-                	tdctl = 'all'
-        ##try section for time if loops
-                try:
-                    if aslist[aslist.index('-inlast')+2] == 'months':
-                        tdctl = int(aslist[aslist.index('-inlast')+1])*30
-                    if aslist[aslist.index('-inlast')+2] == 'years':
-                        tdctl = int(aslist[aslist.index('-inlast')+1])*365
-                    if aslist[aslist.index('-inlast')+2] == 'days':
-                        tdctl = int(aslist[aslist.index('-inlast')+1])
-                    
-                except: 
-                    print 'except'
-                    
-        	if '-entry' in aslist:
-                	datestring = aslist[aslist.index('-entry')+1]
-                	selectdate = datetime.date(int(datestring.split('-')[2]),int(datestring\
-                .split('-')[0]),int(datestring.split('-')[1]))
-                
-                	
-                	
-        
-        	if '-class' in aslist:
-                	acmctl = aslist[aslist.index('-class')+1]
-                	acactl = 'cls'
+		acmctl = 'all'      	 	
+		classctl = ''
+        	
+        	totalctl = request.GET.get('typetime', '')
+		acmctl = request.GET.get('acbox','')
+      		acs = acmctl
+        	
 		##set disp variable to avoid error		
 		dispstring = ''        	
-		##final display string, if conditional is to prevent string from
-        	##displaying while aslist is empty
-		        	
-		if len(aslist) > 1 and '-entry' not in aslist:        
-                	disptuple = rettotal(totalctl,retacmatch(acactl,acmctl,\
-                	rettimedelta(tdctl,logbook)))
-                	
+		        
+                disptuple = rettotal(totalctl,retacmatch(acactl,acmctl,\
+                rettimedelta(tdctl,logbook)))
 
+		text = '{0} is {1}'.format(totalctl,disptuple)
+			
+		return template('hello.html',text=text,aclist=aclist,acs=acs)		
 
-
-		return ('{0} is {1}'.format(totalctl,disptuple))
-
-	
 	else:
-		return template('hello.html')
-		
-	
+		acs = ''
+		return template('hello.html',text=text,aclist=aclist,acs=acs)
 
-
-
-        ##intercept before the string split for other functions
 debug()       
-run()
+run(reloader=True)
 fl.save()
 
 

@@ -1,12 +1,14 @@
 <form action="/hello" method="GET">
 <! <input type="text" size="50" maxlength="100" name="task">
-<input type="submit" name="save" value="save">
+<input type="submit" name="save" value="submit">
 
 <select name='typetime'>
 <option name='duration' value='duration'>duration
 <option name='instrument' value='instrument'>instrument
 <option name='night' value='night'>night
 <option name='instructor' value='instructor'>instructor
+<option name='cc' value='cc'>cross country
+<option name='pic' value='pic'>PIC
 </select>
 
 <select name='acbox'>
@@ -15,8 +17,18 @@
 <option name={{ac}} value={{ac}}> {{ac}}
 %end
 </select>
+
+<select name='classbox'>
+<option name='all' value='all'selected>all
+<option name='AMEL' value='AMEL'>AMEL
+<option name='ASEL' value='ASEL'>ASEL
+<option name='ASES' value='ASES'>ASES
+</select>
+
 <font face="arial">{{text}}</font>
+
 {{acs}}
+
 
 </form>
 

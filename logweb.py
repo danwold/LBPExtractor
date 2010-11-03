@@ -115,19 +115,28 @@ def rettotal(attrib,entlist):
                 total = total + flconv(getattr(f,attrib))
         return total
  
+def retclsmatch(match,entrlist):
+	retlist = []
+        if match != 'all':
+                for f in entrlist:
+                        if f.aircraft.cls == match:
+                                retlist.append(f)
+                return retlist
+        if match == 'all':
+                return entrlist
 
-def retacmatch(attribute,matchey,entrlist):
+def rettypmatch(match,entrlist):
 ##return entries matching ac attributes in a list,
 ##first is attribute name (str)
 ##second is desired match (str)
 ##third is input list 
         retlist = []
-        if attribute != 'all':
+        if match != 'all':
                 for f in entrlist:
-                        if getattr(f.aircraft,attribute) == matchey:
+                        if f.aircraft.typ == match:
                                 retlist.append(f)
                 return retlist
-        if attribute == 'all':
+        if match == 'all':
                 return entrlist
 
 def rettimedelta(tdelta,inlist):
@@ -179,24 +188,25 @@ acs = ''
 def mainpage():
 	text = ''
 	if request.GET.get('save','').strip():
-		
-
-        	##default values for untouched parsing
+	
         	totalctl = 'duration'
-        	acactl = 'all'
         	tdctl = 'all'
-		acmctl = 'all'      	 	
-		classctl = ''
-        	
+		aircraftmatch='all'
+		classmatch = 'all'
+		
+		
+			
         	totalctl = request.GET.get('typetime', '')
-		acmctl = request.GET.get('acbox','')
-      		acs = acmctl
-        	
-		##set disp variable to avoid error		
-		dispstring = ''        	
+		aircraftmatch = request.GET.get('acbox','')	
+		if aircraftmatch == 'all':
+			classmatch = request.GET.get('classbox','')
+			
+
+		
+        	acs =''
+		      	
 		        
-                disptuple = rettotal(totalctl,retacmatch(acactl,acmctl,\
-                rettimedelta(tdctl,logbook)))
+                disptuple = rettotal(totalctl,rettypmatch(aircraftmatch,retclsmatch(classmatch,rettimedelta(tdctl,logbook))))
 
 		text = '{0} is {1}'.format(totalctl,disptuple)
 			
